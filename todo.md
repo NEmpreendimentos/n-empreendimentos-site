@@ -14,3 +14,9 @@
 - [x] Remover categorias dos cards de portfólio.
 - [x] Implementar o carrossel horizontal arrastável.
 - [x] Validar a interação em desktop e celular.
+- [x] Gerar build estático atualizado para o GitHub Pages.
+- [x] Enviar a atualização de portfólio para o repositório público.
+- [x] Confirmar a publicação atualizada no GitHub Pages.
+- [x] Remover Loja Virtual Pro do carrossel de portfólio.
+- [x] Substituir Loja Virtual Pro pelo case Fonte Forte na prova social.
+- [x] Validar e publicar os cases atualizados.
