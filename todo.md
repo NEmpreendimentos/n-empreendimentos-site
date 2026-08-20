@@ -1,0 +1,13 @@
+- [x] Conferir arquivos que serão publicados e excluir artefatos locais.
+- [x] Criar repositório privado no GitHub e enviar o código-fonte atual.
+- [x] Confirmar o link do repositório publicado.
+- [x] Tornar o repositório público.
+- [x] Confirmar o endereço público do site.
+- [x] Diagnosticar a configuração atual do GitHub Pages.
+- [x] Adicionar fluxo de build e publicação compatível com GitHub Pages.
+- [x] Publicar e confirmar que o site deixa de retornar 404.
+- [x] Corrigir o roteador para o subcaminho do GitHub Pages.
+- [x] Publicar a rota única definitiva no GitHub Pages.
+- [x] Renomear a seção para Meu portfólio.
+- [x] Adicionar o card do site Fonte Forte com link e prévia apropriada.
+- [ ] Validar e publicar a atualização.
