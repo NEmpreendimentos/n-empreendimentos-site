@@ -25,7 +25,7 @@ import {
   Zap,
 } from "lucide-react";
 
-const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20conversar%20sobre%20um%20site%20profissional.";
+const WHATSAPP_URL = "https://wa.me/5562998380147?text=Ol%C3%A1%2C%20quero%20conversar%20sobre%20um%20site%20profissional.";
 
 const benefits = [
   { icon: Palette, index: "01", title: "Design exclusivo", text: "Uma identidade digital construída para destacar o seu negócio — não mais um template igual a todos." },
@@ -120,7 +120,7 @@ export default function Home() {
         <section className="cta-section"><div className="cta-grid" /><div className="container cta-inner"><div><span className="section-index">N/ pronto para o próximo nível?</span><h2>Seu negócio já tem história.<br /><span>Agora ele precisa de presença.</span></h2></div><WhatsappButton>Quero conversar sobre meu site</WhatsappButton></div></section>
       </main>
 
-      <footer className="site-footer"><div className="container footer-top"><Logo /><p>Estratégia, design e código para negócios que querem ser escolhidos.</p><div className="footer-socials"><a href="#inicio">Instagram</a><a href="#inicio">LinkedIn</a><a href="#inicio">Behance</a></div></div><div className="container footer-bottom"><span>© 2026 N. Empreendimentos. Feito para mover ideias.</span><span>São Paulo · Brasil</span><a href="#inicio">Voltar ao topo <ArrowUpRight size={14} /></a></div></footer>
+      <footer className="site-footer"><div className="container footer-top"><Logo /><p>Estratégia, design e código para negócios que querem ser escolhidos.</p><a className="footer-contact" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle size={15} /> (62) 99838-0147</a></div><div className="container footer-bottom"><span>© 2026 N. Empreendimentos. Feito para mover ideias.</span><span>São Paulo · Brasil</span><a href="#inicio">Voltar ao topo <ArrowUpRight size={14} /></a></div></footer>
       <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Falar pelo WhatsApp"><MessageCircle size={21} /></a>
     </div>
   );
