@@ -2,7 +2,7 @@
  * N. Empreendimentos — Midnight Conversion Lab
  * Este arquivo mantém a composição assimétrica, o verde-lima proprietário e a prioridade absoluta do CTA WhatsApp.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -39,10 +39,10 @@ const benefits = [
 ];
 
 const projects = [
-  { type: "Landing page", title: "MetaBoost", meta: "Posicionamento + captação", image: assetUrl("metaboost-real_3af6a7bc.webp"), accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
-  { type: "Loja virtual", title: "EmpresteMais+", meta: "Conversão + confiança", image: assetUrl("emprestemais-real_21703354.webp"), accent: "#8f7cff", url: "https://emprestemais.xyz/" },
-  { type: "E-commerce", title: "Fonte Forte", meta: "Produto + conversão", image: assetUrl("fonteforte-portfolio_552fc49c.webp"), accent: "#f96b4a", url: "https://nempreendimentos.github.io/fonteforte-site/" },
-  { type: "Projeto conceito", title: "Loja Virtual Pro", meta: "Catálogo + conversão", image: assetUrl("n-portfolio-institutional_d310d31f.png"), accent: "#62d8ff" },
+  { title: "MetaBoost", meta: "Posicionamento + captação", image: assetUrl("metaboost-real_3af6a7bc.webp"), accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
+  { title: "EmpresteMais+", meta: "Conversão + confiança", image: assetUrl("emprestemais-real_21703354.webp"), accent: "#8f7cff", url: "https://emprestemais.xyz/" },
+  { title: "Fonte Forte", meta: "Produto + conversão", image: assetUrl("fonteforte-portfolio_552fc49c.webp"), accent: "#f96b4a", url: "https://nempreendimentos.github.io/fonteforte-site/" },
+  { title: "Loja Virtual Pro", meta: "Catálogo + conversão", image: assetUrl("n-portfolio-institutional_d310d31f.png"), accent: "#62d8ff" },
 ];
 
 const steps = [
@@ -71,7 +71,26 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [formData, setFormData] = useState({ name: "", business: "", service: "Landing Page", message: "" });
+  const portfolioDrag = useRef({ active: false, startX: 0, startScroll: 0 });
   const closeMenu = () => setMenuOpen(false);
+
+  const startPortfolioDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    portfolioDrag.current = { active: true, startX: event.clientX, startScroll: event.currentTarget.scrollLeft };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.classList.add("is-dragging");
+  };
+
+  const movePortfolioDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!portfolioDrag.current.active) return;
+    event.currentTarget.scrollLeft = portfolioDrag.current.startScroll - (event.clientX - portfolioDrag.current.startX);
+  };
+
+  const endPortfolioDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    portfolioDrag.current.active = false;
+    event.currentTarget.classList.remove("is-dragging");
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
 
   const handleContactSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -148,7 +167,7 @@ export default function Home() {
         </section>
 
         <section id="portfolio" className="section-pad portfolio-section scroll-reveal">
-          <div className="container"><div className="section-intro"><span className="section-index">N/ 02 — meu portfólio</span><h2>Projetos que sabem<br /><span>onde querem chegar.</span></h2><p>Sites desenvolvidos para tornar a proposta de cada negócio mais clara, relevante e pronta para converter interesse em contato.</p></div><div className="project-list">{projects.map((project, idx) => <article className={`project-card project-${idx + 1} scroll-reveal`} key={project.title}><div className="project-info"><span className="project-type" style={{ color: project.accent }}>{project.type}</span><h3>{project.title}</h3><p>{project.meta}</p><div className="project-actions">{project.url ? <a href={project.url} target="_blank" rel="noreferrer" className="project-link project-site-link">Ver site <ArrowUpRight size={16} /></a> : <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="project-link project-site-link">Ver conceito <ArrowUpRight size={16} /></a>}<a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="project-link">Quero algo assim <ArrowUpRight size={16} /></a></div></div><div className="project-image-wrap"><img src={project.image} alt={`Mockup de ${project.title}`} /><div className="image-shade" /></div></article>)}</div></div>
+          <div className="container"><div className="section-intro"><span className="section-index">N/ 02 — meu portfólio</span><h2>Projetos que sabem<br /><span>onde querem chegar.</span></h2><p>Arraste para o lado e explore alguns dos sites que criei para tornar cada negócio mais claro, relevante e pronto para converter interesse em contato.</p></div><div className="project-list" role="region" aria-label="Carrossel de portfólio" onPointerDown={startPortfolioDrag} onPointerMove={movePortfolioDrag} onPointerUp={endPortfolioDrag} onPointerCancel={endPortfolioDrag}>{projects.map((project, idx) => <article className={`project-card project-${idx + 1} scroll-reveal`} key={project.title}><div className="project-info"><span className="project-counter" style={{ color: project.accent }}>{String(idx + 1).padStart(2, "0")}</span><h3>{project.title}</h3><p>{project.meta}</p><div className="project-actions">{project.url ? <a href={project.url} target="_blank" rel="noreferrer" className="project-link project-site-link">Ver site <ArrowUpRight size={16} /></a> : <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="project-link project-site-link">Ver conceito <ArrowUpRight size={16} /></a>}<a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="project-link">Quero algo assim <ArrowUpRight size={16} /></a></div></div><div className="project-image-wrap"><img src={project.image} alt={`Mockup de ${project.title}`} draggable={false} /><div className="image-shade" /></div></article>)}</div><div className="portfolio-drag-hint" aria-hidden="true"><span>Arraste para explorar</span><i /></div></div>
         </section>
 
         <section id="processo" className="section-pad process-section scroll-reveal"><div className="container process-layout"><div className="process-sticky"><span className="section-index">N/ 03 — o caminho</span><h2>Do “preciso de um site” ao <span>“agora faz sentido.”</span></h2><p>Um processo enxuto, transparente e sem palavras difíceis para você acompanhar o projeto com segurança.</p><WhatsappButton secondary>Falar sobre meu projeto</WhatsappButton></div><div className="steps-list">{steps.map((step, idx) => <div className="step" key={step.number}><div className="step-marker"><span>{step.number}</span>{idx < steps.length - 1 && <i />}</div><div><h3>{step.title}</h3><p>{step.text}</p></div></div>)}</div></div></section>

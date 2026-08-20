@@ -10,4 +10,7 @@
 - [x] Publicar a rota única definitiva no GitHub Pages.
 - [x] Renomear a seção para Meu portfólio.
 - [x] Adicionar o card do site Fonte Forte com link e prévia apropriada.
-- [ ] Validar e publicar a atualização.
+- [x] Validar e publicar a atualização.
+- [x] Remover categorias dos cards de portfólio.
+- [x] Implementar o carrossel horizontal arrastável.
+- [x] Validar a interação em desktop e celular.
