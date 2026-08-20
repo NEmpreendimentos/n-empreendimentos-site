@@ -26,6 +26,10 @@ import {
 } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/5562998380147?text=Ol%C3%A1%2C%20quero%20conversar%20sobre%20um%20site%20profissional.";
+const assetBase = import.meta.env.VITE_GITHUB_PAGES === "true"
+  ? "https://nsitevendem-aqiwfnhl.manus.space/manus-storage/"
+  : "/manus-storage/";
+const assetUrl = (fileName: string) => `${assetBase}${fileName}`;
 
 const benefits = [
   { icon: Palette, index: "01", title: "Design exclusivo", text: "Uma identidade digital construída para destacar o seu negócio — não mais um template igual a todos." },
@@ -35,9 +39,9 @@ const benefits = [
 ];
 
 const projects = [
-  { type: "Landing page", title: "MetaBoost", meta: "Posicionamento + captação", image: "/manus-storage/metaboost-real_3af6a7bc.webp", accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
-  { type: "Loja virtual", title: "EmpresteMais+", meta: "Conversão + confiança", image: "/manus-storage/emprestemais-real_21703354.webp", accent: "#8f7cff", url: "https://emprestemais.xyz/" },
-  { type: "Projeto conceito", title: "Loja Virtual Pro", meta: "Catálogo + conversão", image: "/manus-storage/n-portfolio-institutional_d310d31f.png", accent: "#62d8ff" },
+  { type: "Landing page", title: "MetaBoost", meta: "Posicionamento + captação", image: assetUrl("metaboost-real_3af6a7bc.webp"), accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
+  { type: "Loja virtual", title: "EmpresteMais+", meta: "Conversão + confiança", image: assetUrl("emprestemais-real_21703354.webp"), accent: "#8f7cff", url: "https://emprestemais.xyz/" },
+  { type: "Projeto conceito", title: "Loja Virtual Pro", meta: "Catálogo + conversão", image: assetUrl("n-portfolio-institutional_d310d31f.png"), accent: "#62d8ff" },
 ];
 
 const steps = [
@@ -119,7 +123,7 @@ export default function Home() {
       </header>
 
       <main>
-        <section id="inicio" className="hero section-pad">
+        <section id="inicio" className="hero section-pad" style={{ "--hero-image": `url("${assetUrl("n-hero-neon_07eb8b40.png")}")` } as React.CSSProperties}>
           <div className="hero-glow" />
           <div className="container hero-grid">
             <div className="hero-copy reveal">

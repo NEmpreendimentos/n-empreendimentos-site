@@ -34,7 +34,7 @@ button { font: inherit; }
 .button-secondary:hover { border-color: #c8ff4a; color: #c8ff4a; transform: translateY(-2px); }
 .menu-toggle { display: none; border: 1px solid rgba(255,255,255,.13); color: #f1f2ed; background: transparent; border-radius: 8px; width: 42px; height: 42px; }
 .section-pad { padding: 144px 0; }
-.hero { position: relative; min-height: 840px; padding-top: 200px; display: flex; align-items: center; background-image: linear-gradient(90deg, rgba(11,13,13,.96) 0%, rgba(11,13,13,.88) 37%, rgba(11,13,13,.28) 100%), url('/manus-storage/n-hero-neon_07eb8b40.png'); background-size: cover; background-position: center; }
+.hero { position: relative; min-height: 840px; padding-top: 200px; display: flex; align-items: center; background-image: linear-gradient(90deg, rgba(11,13,13,.96) 0%, rgba(11,13,13,.88) 37%, rgba(11,13,13,.28) 100%), var(--hero-image); background-size: cover; background-position: center; }
 .hero::before { content: 'N/ 2026'; position: absolute; top: 132px; right: 32px; color: rgba(255,255,255,.26); font: 10px 'IBM Plex Mono', monospace; letter-spacing: .14em; transform: rotate(90deg); transform-origin: right; }
 .hero-glow { position: absolute; width: 440px; height: 440px; right: 12%; top: 21%; border-radius: 50%; background: rgba(108,81,255,.1); filter: blur(80px); pointer-events: none; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(460px, 1.05fr); gap: 70px; align-items: center; }
