@@ -35,8 +35,8 @@ const benefits = [
 ];
 
 const projects = [
-  { type: "Landing page", title: "MetaBoost", meta: "Posicionamento + captação", image: "/manus-storage/n-portfolio-landing_71aaa46a.png", accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
-  { type: "Loja virtual", title: "EmpresteMais+", meta: "Conversão + confiança", image: "/manus-storage/n-portfolio-commerce_871578aa.png", accent: "#8f7cff", url: "https://emprestemais.xyz/" },
+  { type: "Landing page", title: "MetaBoost", meta: "Posicionamento + captação", image: "/manus-storage/metaboost-real_3af6a7bc.webp", accent: "#c8ff4a", url: "https://emagrecendocomsaude.xyz/" },
+  { type: "Loja virtual", title: "EmpresteMais+", meta: "Conversão + confiança", image: "/manus-storage/emprestemais-real_21703354.webp", accent: "#8f7cff", url: "https://emprestemais.xyz/" },
   { type: "Projeto conceito", title: "Loja Virtual Pro", meta: "Catálogo + conversão", image: "/manus-storage/n-portfolio-institutional_d310d31f.png", accent: "#62d8ff" },
 ];
 
