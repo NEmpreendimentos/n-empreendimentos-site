@@ -20,3 +20,6 @@
 - [x] Remover Loja Virtual Pro do carrossel de portfólio.
 - [x] Substituir Loja Virtual Pro pelo case Fonte Forte na prova social.
 - [x] Validar e publicar os cases atualizados.
+- [x] Implementar transições de passagem entre seções.
+- [x] Refinar os sinais de conversão e orientação de navegação.
+- [x] Validar acabamento visual em desktop e celular.

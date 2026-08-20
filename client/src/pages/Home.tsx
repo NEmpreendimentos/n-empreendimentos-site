@@ -70,6 +70,8 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [formData, setFormData] = useState({ name: "", business: "", service: "Landing Page", message: "" });
+  const [activeSection, setActiveSection] = useState("inicio");
+  const [scrollProgress, setScrollProgress] = useState(0);
   const portfolioDrag = useRef({ active: false, startX: 0, startScroll: 0 });
   const closeMenu = () => setMenuOpen(false);
 
@@ -125,6 +127,29 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const sectionIds = ["inicio", "beneficios", "portfolio", "processo", "faq"];
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
+      }),
+      { rootMargin: "-30% 0px -55% 0px", threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+
+    const updateProgress = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(scrollableHeight > 0 ? Math.min(window.scrollY / scrollableHeight, 1) : 0);
+    };
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateProgress);
+    };
+  }, []);
+
   return (
     <div className="site-shell">
       <header className="site-header">
@@ -132,13 +157,14 @@ export default function Home() {
           <Logo />
           <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
           <nav className={`main-nav ${menuOpen ? "is-open" : ""}`} aria-label="Navegação principal">
-            <a href="#beneficios" onClick={closeMenu}>Benefícios</a>
-            <a href="#portfolio" onClick={closeMenu}>Portfólio</a>
-            <a href="#processo" onClick={closeMenu}>Processo</a>
-            <a href="#faq" onClick={closeMenu}>FAQ</a>
+            <a href="#beneficios" onClick={closeMenu} className={activeSection === "beneficios" ? "is-active" : ""} aria-current={activeSection === "beneficios" ? "page" : undefined}>Benefícios</a>
+            <a href="#portfolio" onClick={closeMenu} className={activeSection === "portfolio" ? "is-active" : ""} aria-current={activeSection === "portfolio" ? "page" : undefined}>Portfólio</a>
+            <a href="#processo" onClick={closeMenu} className={activeSection === "processo" ? "is-active" : ""} aria-current={activeSection === "processo" ? "page" : undefined}>Processo</a>
+            <a href="#faq" onClick={closeMenu} className={activeSection === "faq" ? "is-active" : ""} aria-current={activeSection === "faq" ? "page" : undefined}>FAQ</a>
             <WhatsappButton>Fazer orçamento</WhatsappButton>
           </nav>
         </div>
+        <span className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} aria-hidden="true" />
       </header>
 
       <main>
@@ -161,25 +187,25 @@ export default function Home() {
           <div className="scroll-cue"><span>scroll para explorar</span><div className="scroll-line" /></div>
         </section>
 
-        <section id="beneficios" className="section-pad benefits-section scroll-reveal">
+        <section id="beneficios" className="section-pad benefits-section section-flow scroll-reveal">
           <div className="container"><div className="section-intro split-intro"><div><span className="section-index">N/ 01 — por que comigo</span><h2>Design bom chama atenção.<br /><span>Design estratégico</span> move.</h2></div><p>Do primeiro wireframe ao último detalhe no celular, cada escolha tem um motivo: tornar seu negócio mais claro, desejável e fácil de escolher.</p></div><div className="benefit-grid">{benefits.map(({ icon: Icon, index, title, text }) => <article className="benefit-card scroll-reveal" key={title}><div className="card-topline"><span>{index}</span><Icon size={20} /></div><h3>{title}</h3><p>{text}</p><ArrowUpRight className="card-arrow" size={19} /></article>)}</div></div>
         </section>
 
-        <section id="portfolio" className="section-pad portfolio-section scroll-reveal">
+        <section id="portfolio" className="section-pad portfolio-section section-flow scroll-reveal">
           <div className="container"><div className="section-intro"><span className="section-index">N/ 02 — meu portfólio</span><h2>Projetos que sabem<br /><span>onde querem chegar.</span></h2><p>Arraste para o lado e explore alguns dos sites que criei para tornar cada negócio mais claro, relevante e pronto para converter interesse em contato.</p></div><div className="project-list" role="region" aria-label="Carrossel de portfólio" onPointerDown={startPortfolioDrag} onPointerMove={movePortfolioDrag} onPointerUp={endPortfolioDrag} onPointerCancel={endPortfolioDrag}>{projects.map((project, idx) => <article className={`project-card project-${idx + 1} scroll-reveal`} key={project.title}><div className="project-info"><span className="project-counter" style={{ color: project.accent }}>{String(idx + 1).padStart(2, "0")}</span><h3>{project.title}</h3><p>{project.meta}</p><div className="project-actions"><a href={project.url} target="_blank" rel="noreferrer" className="project-link project-site-link">Ver site <ArrowUpRight size={16} /></a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="project-link">Quero algo assim <ArrowUpRight size={16} /></a></div></div><div className="project-image-wrap"><img src={project.image} alt={`Mockup de ${project.title}`} draggable={false} /><div className="image-shade" /></div></article>)}</div><div className="portfolio-drag-hint" aria-hidden="true"><span>Arraste para explorar</span><i /></div></div>
         </section>
 
-        <section id="processo" className="section-pad process-section scroll-reveal"><div className="container process-layout"><div className="process-sticky"><span className="section-index">N/ 03 — o caminho</span><h2>Do “preciso de um site” ao <span>“agora faz sentido.”</span></h2><p>Um processo enxuto, transparente e sem palavras difíceis para você acompanhar o projeto com segurança.</p><WhatsappButton secondary>Falar sobre meu projeto</WhatsappButton></div><div className="steps-list">{steps.map((step, idx) => <div className="step" key={step.number}><div className="step-marker"><span>{step.number}</span>{idx < steps.length - 1 && <i />}</div><div><h3>{step.title}</h3><p>{step.text}</p></div></div>)}</div></div></section>
+        <section id="processo" className="section-pad process-section section-flow scroll-reveal"><div className="container process-layout"><div className="process-sticky"><span className="section-index">N/ 03 — o caminho</span><h2>Do “preciso de um site” ao <span>“agora faz sentido.”</span></h2><p>Um processo enxuto, transparente e sem palavras difíceis para você acompanhar o projeto com segurança.</p><WhatsappButton secondary>Falar sobre meu projeto</WhatsappButton></div><div className="steps-list">{steps.map((step, idx) => <div className="step" key={step.number}><div className="step-marker"><span>{step.number}</span>{idx < steps.length - 1 && <i />}</div><div><h3>{step.title}</h3><p>{step.text}</p></div></div>)}</div></div></section>
 
-        <section className="section-pad proof-section scroll-reveal"><div className="container proof-layout"><div><span className="section-index">N/ 04 — prova social</span><h2>Projetos reais.<br /><span>Resultados que ficam.</span></h2></div><div className="proof-note"><ShieldCheck size={20} /><p>Alguns trabalhos desenvolvidos pela N. Empreendimentos, com textos publicados nas próprias páginas dos projetos.</p></div></div><div className="container testimonial-placeholders"><article className="testimonial-placeholder case-card"><div className="case-card-top"><span className="case-brand">M</span><span className="case-label">MetaBoost · case real</span></div><blockquote>Landing page de saúde com narrativa clara, autoridade visual e caminhos de conversão pensados para agendamento.</blockquote><div className="case-result"><strong>Landing page</strong><span>estratégia + conversão</span></div></article><article className="testimonial-placeholder active-placeholder case-card"><div className="case-card-top"><span className="case-brand empreste-brand">E+</span><span className="case-label">EmpresteMais+ · case real</span></div><blockquote>Site de crédito com planos organizados, comunicação direta e uma jornada simples do primeiro clique à simulação.</blockquote><div className="case-result"><strong>Site comercial</strong><span>clareza + confiança</span></div></article><article className="testimonial-placeholder case-card"><div className="case-card-top"><span className="case-brand" style={{ background: "#f96b4a" }}>FF</span><span className="case-label">Fonte Forte · case real</span></div><blockquote>Página de produto com apresentação direta, visual marcante e foco em guiar o visitante até a próxima ação.</blockquote><div className="case-result"><strong>Site de produto</strong><span>presença + conversão</span></div></article></div></section>
+        <section className="section-pad proof-section section-flow scroll-reveal"><div className="container proof-layout"><div><span className="section-index">N/ 04 — prova social</span><h2>Projetos reais.<br /><span>Resultados que ficam.</span></h2></div><div className="proof-note"><ShieldCheck size={20} /><p>Alguns trabalhos desenvolvidos pela N. Empreendimentos, com textos publicados nas próprias páginas dos projetos.</p></div></div><div className="container testimonial-placeholders"><article className="testimonial-placeholder case-card"><div className="case-card-top"><span className="case-brand">M</span><span className="case-label">MetaBoost · case real</span></div><blockquote>Landing page de saúde com narrativa clara, autoridade visual e caminhos de conversão pensados para agendamento.</blockquote><div className="case-result"><strong>Landing page</strong><span>estratégia + conversão</span></div></article><article className="testimonial-placeholder active-placeholder case-card"><div className="case-card-top"><span className="case-brand empreste-brand">E+</span><span className="case-label">EmpresteMais+ · case real</span></div><blockquote>Site de crédito com planos organizados, comunicação direta e uma jornada simples do primeiro clique à simulação.</blockquote><div className="case-result"><strong>Site comercial</strong><span>clareza + confiança</span></div></article><article className="testimonial-placeholder case-card"><div className="case-card-top"><span className="case-brand" style={{ background: "#f96b4a" }}>FF</span><span className="case-label">Fonte Forte · case real</span></div><blockquote>Página de produto com apresentação direta, visual marcante e foco em guiar o visitante até a próxima ação.</blockquote><div className="case-result"><strong>Site de produto</strong><span>presença + conversão</span></div></article></div></section>
 
-        <section id="faq" className="section-pad faq-section scroll-reveal"><div className="container faq-layout"><div className="faq-heading"><span className="section-index">N/ 05 — perguntas frequentes</span><h2>Antes de começar,<br /><span>vamos deixar claro.</span></h2><p>Se a sua dúvida não apareceu aqui, me chama no WhatsApp. Eu respondo sem rodeios.</p><WhatsappButton secondary>Tirar uma dúvida</WhatsappButton></div><div className="faq-list">{faqs.map((faq, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={faq.question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{faq.question}</span><ChevronDown size={19} /></button><div className="faq-answer"><p>{faq.answer}</p></div></div>)}</div></div></section>
+        <section id="faq" className="section-pad faq-section section-flow scroll-reveal"><div className="container faq-layout"><div className="faq-heading"><span className="section-index">N/ 05 — perguntas frequentes</span><h2>Antes de começar,<br /><span>vamos deixar claro.</span></h2><p>Se a sua dúvida não apareceu aqui, me chama no WhatsApp. Eu respondo sem rodeios.</p><WhatsappButton secondary>Tirar uma dúvida</WhatsappButton></div><div className="faq-list">{faqs.map((faq, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={faq.question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{faq.question}</span><ChevronDown size={19} /></button><div className="faq-answer"><p>{faq.answer}</p></div></div>)}</div></div></section>
 
-        <section className="cta-section scroll-reveal"><div className="cta-grid" /><div className="container cta-inner"><div className="cta-copy"><span className="section-index">N/ pronto para o próximo nível?</span><h2>Seu negócio já tem história.<br /><span>Agora ele precisa de presença.</span></h2><p>Preencha o formulário. Eu recebo tudo organizado no WhatsApp e retorno para entender o melhor caminho.</p></div><form className="contact-form" onSubmit={handleContactSubmit}><div className="form-row"><label>Seu nome<input required value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Como posso te chamar?" /></label><label>Seu negócio<input value={formData.business} onChange={(event) => setFormData({ ...formData, business: event.target.value })} placeholder="Nome da empresa" /></label></div><label>O que você precisa?<select value={formData.service} onChange={(event) => setFormData({ ...formData, service: event.target.value })}><option>Landing Page</option><option>Site Institucional</option><option>Loja Virtual</option><option>Outro projeto</option></select></label><label>Conte um pouco sobre o projeto<textarea value={formData.message} onChange={(event) => setFormData({ ...formData, message: event.target.value })} placeholder="Objetivo, prazo ou qualquer contexto importante..." rows={3} /></label><button className="form-submit" type="submit"><MessageCircle size={17} /> Enviar pelo WhatsApp <ArrowUpRight size={17} /></button></form></div></section>
+        <section className="cta-section section-flow scroll-reveal"><div className="cta-grid" /><div className="container cta-inner"><div className="cta-copy"><span className="section-index">N/ pronto para o próximo nível?</span><h2>Seu negócio já tem história.<br /><span>Agora ele precisa de presença.</span></h2><p>Preencha o formulário. Eu recebo tudo organizado no WhatsApp e retorno para entender o melhor caminho.</p></div><form className="contact-form" onSubmit={handleContactSubmit}><div className="form-row"><label>Seu nome<input required value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Como posso te chamar?" /></label><label>Seu negócio<input value={formData.business} onChange={(event) => setFormData({ ...formData, business: event.target.value })} placeholder="Nome da empresa" /></label></div><label>O que você precisa?<select value={formData.service} onChange={(event) => setFormData({ ...formData, service: event.target.value })}><option>Landing Page</option><option>Site Institucional</option><option>Loja Virtual</option><option>Outro projeto</option></select></label><label>Conte um pouco sobre o projeto<textarea value={formData.message} onChange={(event) => setFormData({ ...formData, message: event.target.value })} placeholder="Objetivo, prazo ou qualquer contexto importante..." rows={3} /></label><button className="form-submit" type="submit"><MessageCircle size={17} /> Enviar pelo WhatsApp <ArrowUpRight size={17} /></button></form></div></section>
       </main>
 
       <footer className="site-footer"><div className="container footer-top"><Logo /><p>Estratégia, design e código para negócios que querem ser escolhidos.</p><a className="footer-contact" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle size={15} /> (62) 99838-0147</a></div><div className="container footer-bottom"><span>© 2023 N. Empreendimentos. Feito para mover ideias.</span><span>São Paulo · Brasil</span><a href="#inicio">Voltar ao topo <ArrowUpRight size={14} /></a></div></footer>
-      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Falar pelo WhatsApp"><MessageCircle size={21} /></a>
+      <a className="floating-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Falar pelo WhatsApp"><MessageCircle size={21} /><span>Falar no WhatsApp</span></a>
     </div>
   );
 }
