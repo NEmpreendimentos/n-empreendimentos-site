@@ -65,7 +65,20 @@ function WhatsappButton({ children, secondary = false }: { children: React.React
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [formData, setFormData] = useState({ name: "", business: "", service: "Landing Page", message: "" });
   const closeMenu = () => setMenuOpen(false);
+
+  const handleContactSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const whatsappMessage = [
+      "Olá, N. Empreendimentos! Quero conversar sobre um projeto.",
+      `Nome: ${formData.name}`,
+      `Negócio: ${formData.business || "Não informado"}`,
+      `Serviço: ${formData.service}`,
+      `Mensagem: ${formData.message || "Gostaria de receber mais informações."}`,
+    ].join("\\n");
+    window.open(`https://wa.me/5562998380147?text=${encodeURIComponent(whatsappMessage)}`, "_blank", "noopener,noreferrer");
+  };
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>(".scroll-reveal");
@@ -139,7 +152,7 @@ export default function Home() {
 
         <section id="faq" className="section-pad faq-section scroll-reveal"><div className="container faq-layout"><div className="faq-heading"><span className="section-index">N/ 05 — perguntas frequentes</span><h2>Antes de começar,<br /><span>vamos deixar claro.</span></h2><p>Se a sua dúvida não apareceu aqui, me chama no WhatsApp. Eu respondo sem rodeios.</p><WhatsappButton secondary>Tirar uma dúvida</WhatsappButton></div><div className="faq-list">{faqs.map((faq, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={faq.question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{faq.question}</span><ChevronDown size={19} /></button><div className="faq-answer"><p>{faq.answer}</p></div></div>)}</div></div></section>
 
-        <section className="cta-section scroll-reveal"><div className="cta-grid" /><div className="container cta-inner"><div><span className="section-index">N/ pronto para o próximo nível?</span><h2>Seu negócio já tem história.<br /><span>Agora ele precisa de presença.</span></h2></div><WhatsappButton>Quero conversar sobre meu site</WhatsappButton></div></section>
+        <section className="cta-section scroll-reveal"><div className="cta-grid" /><div className="container cta-inner"><div className="cta-copy"><span className="section-index">N/ pronto para o próximo nível?</span><h2>Seu negócio já tem história.<br /><span>Agora ele precisa de presença.</span></h2><p>Preencha o formulário. Eu recebo tudo organizado no WhatsApp e retorno para entender o melhor caminho.</p></div><form className="contact-form" onSubmit={handleContactSubmit}><div className="form-row"><label>Seu nome<input required value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Como posso te chamar?" /></label><label>Seu negócio<input value={formData.business} onChange={(event) => setFormData({ ...formData, business: event.target.value })} placeholder="Nome da empresa" /></label></div><label>O que você precisa?<select value={formData.service} onChange={(event) => setFormData({ ...formData, service: event.target.value })}><option>Landing Page</option><option>Site Institucional</option><option>Loja Virtual</option><option>Outro projeto</option></select></label><label>Conte um pouco sobre o projeto<textarea value={formData.message} onChange={(event) => setFormData({ ...formData, message: event.target.value })} placeholder="Objetivo, prazo ou qualquer contexto importante..." rows={3} /></label><button className="form-submit" type="submit"><MessageCircle size={17} /> Enviar pelo WhatsApp <ArrowUpRight size={17} /></button></form></div></section>
       </main>
 
       <footer className="site-footer"><div className="container footer-top"><Logo /><p>Estratégia, design e código para negócios que querem ser escolhidos.</p><a className="footer-contact" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle size={15} /> (62) 99838-0147</a></div><div className="container footer-bottom"><span>© 2023 N. Empreendimentos. Feito para mover ideias.</span><span>São Paulo · Brasil</span><a href="#inicio">Voltar ao topo <ArrowUpRight size={14} /></a></div></footer>
